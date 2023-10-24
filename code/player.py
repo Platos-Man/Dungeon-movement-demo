@@ -1,5 +1,3 @@
-from typing import Any
-
 import pygame
 
 
@@ -13,10 +11,12 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=pos)
 
         self.direction = pygame.math.Vector2(0, -1)
+        self.input_flag = True
 
     def input(self):
         keys = pygame.key.get_pressed()
-        if not True in keys:
+        if self.input_flag:
+            self.input_flag = False
             if keys[pygame.K_UP]:
                 pass
             elif keys[pygame.K_DOWN]:
@@ -25,12 +25,13 @@ class Player(pygame.sprite.Sprite):
             elif keys[pygame.K_LEFT] and pygame.KEYDOWN:
                 self.direction = self.direction.rotate(-90)
                 self.image = pygame.transform.rotate(self.image, 90)
-                print(keys[pygame.K_LEFT])
 
             elif keys[pygame.K_RIGHT] and pygame.KEYDOWN:
                 self.direction = self.direction.rotate(90)
                 self.image = pygame.transform.rotate(self.image, -90)
-                print(self.direction)
+
+        if not True in keys:
+            self.input_flag = True
 
     def update(self):
         self.input()
