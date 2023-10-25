@@ -12,7 +12,6 @@ class Level:
         self.visible_sprites = pygame.sprite.Group()
         self.obstacle_sprites = pygame.sprite.Group()
         self.player_sprite = pygame.sprite.GroupSingle()
-
         self.create_map()
 
     def create_map(self):
@@ -26,9 +25,10 @@ class Level:
                     Floor([self.visible_sprites], (x, y))
                 elif col == "p":
                     Floor([self.visible_sprites], (x, y))
-                    Player([self.visible_sprites, self.player_sprite], (x, y))
+                    Player([self.player_sprite], (x, y), self.obstacle_sprites)
 
     def run(self):
         self.visible_sprites.draw(self.display_surface)
+        self.player_sprite.draw(self.display_surface)
         self.visible_sprites.update()
-        print(self.player_sprite.sprite.direction)
+        self.player_sprite.update()
