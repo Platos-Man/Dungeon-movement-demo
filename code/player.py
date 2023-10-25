@@ -5,7 +5,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, groups, pos):
         super().__init__(groups)
         image = pygame.transform.scale2x(
-            pygame.image.load("../graphics/player.png").convert_alpha()
+            pygame.image.load("./graphics/player.png").convert_alpha()
         )
         self.image = image
         self.rect = self.image.get_rect(topleft=pos)
