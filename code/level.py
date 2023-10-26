@@ -18,11 +18,10 @@ class Level:
         self.enemy_sprites = pygame.sprite.Group()
         self.ladder_sprites = pygame.sprite.Group()
 
-        self.current_level = 0
         self.create_map()
 
-    def create_map(self):
-        for row_idx, row in enumerate(LEVELS[self.current_level]):
+    def create_map(self, level=1):
+        for row_idx, row in enumerate(LEVELS[level]):
             for col_idx, col in enumerate(row):
                 pos = (col_idx * TILESIZE, row_idx * TILESIZE)
                 if col == "x":
@@ -37,14 +36,15 @@ class Level:
                     Enemy([self.visible_sprites, self.enemy_sprites], pos)
                 elif col == "p":
                     Floor([self.visible_sprites], pos)
-                    Player(
-                        [self.player_sprite],
-                        pos,
-                        self.obstacle_sprites,
-                        self.current_level,
-                        self.ladder_sprites,
-                        self.enemy_sprites,
-                    )
+                    if not self.player_sprite:
+                        Player(
+                            [self.player_sprite],
+                            pos,
+                            self.obstacle_sprites,
+                            self.ladder_sprites,
+                            self.enemy_sprites,
+                            self.create_map,
+                        )
 
     def run(self):
         self.visible_sprites.draw(self.display_surface)
