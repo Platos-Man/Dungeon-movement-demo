@@ -8,7 +8,7 @@ from enemy import Enemy
 
 
 class Level:
-    def __init__(self):
+    def __init__(self, change_state):
         self.display_surface = pygame.display.get_surface()
 
         self.visible_sprites = pygame.sprite.Group()
@@ -16,7 +16,11 @@ class Level:
         self.player_sprite = pygame.sprite.GroupSingle()
 
         self.enemy_sprites = pygame.sprite.Group()
+        self.cleared_enemies = []
+
         self.ladder_sprites = pygame.sprite.Group()
+
+        self.change_state = change_state
 
         self.create_map()
 
@@ -33,7 +37,9 @@ class Level:
                 elif col == "d":
                     Ladder([self.visible_sprites, self.ladder_sprites], pos, "down")
                 elif col == "e":
-                    Enemy([self.visible_sprites, self.enemy_sprites], pos)
+                    Floor([self.visible_sprites], pos)
+                    if not pos in self.cleared_enemies:
+                        Enemy([self.visible_sprites, self.enemy_sprites], pos)
                 elif col == "p":
                     Floor([self.visible_sprites], pos)
                     if not self.player_sprite:
@@ -44,7 +50,12 @@ class Level:
                             self.ladder_sprites,
                             self.enemy_sprites,
                             self.create_map,
+                            self.change_state,
+                            self.clear_enemy,
                         )
+
+    def clear_enemy(self, enemy):
+        self.cleared_enemies.append(enemy)
 
     def run(self):
         self.visible_sprites.draw(self.display_surface)

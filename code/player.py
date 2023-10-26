@@ -4,7 +4,7 @@ from ladder import Ladder
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, groups, pos, obstacles, ladders, enemies, create_map):
+    def __init__(self, groups, pos, obstacles, ladders, enemies, create_map, change_state, clear_enemy):
         super().__init__(groups)
         image = pygame.transform.scale2x(pygame.image.load("./graphics/player.png").convert_alpha())
         self.image = image
@@ -18,7 +18,11 @@ class Player(pygame.sprite.Sprite):
         self.enemy_sprites = enemies
 
         self.current_level = 1
+
+        # Level methods
         self.create_map = create_map
+        self.change_state = change_state
+        self.clear_enemy = clear_enemy
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -29,11 +33,13 @@ class Player(pygame.sprite.Sprite):
                 self.rect.y += self.direction.y * TILESIZE
                 self.rect.x += self.direction.x * TILESIZE
                 self.check_obstacle_collisions(current_pos)
+                self.check_enemy_collisions()
 
             elif keys[pygame.K_DOWN]:
                 self.rect.y -= self.direction.y * TILESIZE
                 self.rect.x -= self.direction.x * TILESIZE
                 self.check_obstacle_collisions(current_pos)
+                self.check_enemy_collisions()
 
             elif keys[pygame.K_LEFT]:
                 self.direction = self.direction.rotate(-90)
@@ -66,6 +72,13 @@ class Player(pygame.sprite.Sprite):
                 else:
                     self.current_level += -1
                     self.create_map(self.current_level)
+
+    def check_enemy_collisions(self):
+        for enemy in self.enemy_sprites:
+            if enemy.rect.colliderect(self.rect):
+                self.clear_enemy((enemy.rect.x, enemy.rect.y))
+                enemy.kill()
+                self.change_state("battle")
 
     def update(self):
         self.input()

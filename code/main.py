@@ -3,6 +3,7 @@ import sys
 import pygame
 from level import Level
 from settings import FPS, HEIGTH, WIDTH
+from battle import Battle
 
 
 class Game:
@@ -12,7 +13,13 @@ class Game:
         self.screen = pygame.display.set_mode((WIDTH, HEIGTH))
         self.clock = pygame.time.Clock()
 
-        self.level = Level()
+        self.state = "dungeon"
+
+        self.battle = Battle(self.change_state)
+        self.level = Level(self.change_state)
+
+    def change_state(self, state):
+        self.state = state
 
     def run(self):
         while True:
@@ -22,7 +29,10 @@ class Game:
                     sys.exit()
 
             self.screen.fill("black")
-            self.level.run()
+            if self.state == "dungeon":
+                self.level.run()
+            else:
+                self.battle.run()
             pygame.display.update()
             self.clock.tick(FPS)
 
