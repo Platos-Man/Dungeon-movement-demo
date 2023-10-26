@@ -28,10 +28,11 @@ class Game:
                     pygame.quit()
                     sys.exit()
 
-            self.screen.fill("black")
             if self.state == "dungeon":
+                self.screen.fill("black")
                 self.level.run()
             else:
+                self.screen.fill("grey")
                 self.battle.run()
             pygame.display.update()
             self.clock.tick(FPS)
